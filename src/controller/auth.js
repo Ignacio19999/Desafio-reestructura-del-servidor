@@ -1,4 +1,6 @@
 const User = require('../models/Usuario');
+const UserRepository = require('../repositories/userRepository');
+const { generateToken } = require('../utils/jwt');
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -23,3 +25,19 @@ const register = async (req, res) => {
 };
 
 module.exports = { register };
+
+const userRepository = new UserRepository();
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  
+  // Implementa tu lógica de autenticación aquí
+  const user = await userRepository.getUserByEmail(email);
+  
+  if (!user || user.password !== password) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
+  
+  const token = generateToken(user);
+  res.json({ token });
+};

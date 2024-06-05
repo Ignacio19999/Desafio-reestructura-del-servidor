@@ -1,11 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const exphbs = require('express-handlebars');
 const router = express.Router();
 const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken');
-const authMiddleware = require('./middlewares/authMiddleware');
+const connectDB = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const { isAdmin, isUser } = require('./middlewares/authMiddleware');
 const sessionRouter = require('./src/routes/session.router');
 const viewsRouter = require('./src/routes/views.router');
 
@@ -22,6 +25,8 @@ app.set('view engine', 'handlebars');
 // Express
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+
 
 // Passport
 require('./src/config/passport-local.config')(passport);
@@ -46,6 +51,9 @@ mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, use
 // Rutas
 app.use('/session', sessionRouter);
 app.use('/views', viewsRouter);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/carts', authenticateToken, cartRoutes);
 
 const userSchema = new mongoose.Schema({
   username: String,
