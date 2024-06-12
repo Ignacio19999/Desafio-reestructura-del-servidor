@@ -11,6 +11,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const { isAdmin, isUser } = require('./middlewares/authMiddleware');
 const sessionRouter = require('./src/routes/session.router');
 const viewsRouter = require('./src/routes/views.router');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -54,6 +55,10 @@ app.use('/views', viewsRouter);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/carts', authenticateToken, cartRoutes);
+app.use('/api', mockRoutes);
+
+// Middleware de manejo de errores
+app.use(errorHandler);
 
 const userSchema = new mongoose.Schema({
   username: String,

@@ -2,6 +2,8 @@ const CartRepository = require('../repositories/cartRepository');
 const ProductRepository = require('../repositories/productRepository');
 const TicketRepository = require('../repositories/ticketRepository');
 const TicketService = require('../services/ticketService');
+const CustomError = require('../utils/customError');
+const ERROR_DICTIONARY = require('../utils/errorDictionary');
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
